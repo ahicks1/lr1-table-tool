@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#344e5e">
+
+    <meta property="og:title" content="Bitwarp Design">
+    <meta property="og:image" content="img/MainSplash.png">
+    <meta property="og:description" content="Bitwarp Design is a digital design and development firm by Alexander Hicks">
+
+    <title>Bitwarp Design</title>
+    <link rel="stylesheet" href="css/bulma.css">
+    <link rel="icon" type="image/png" href="img/favicon.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="img/favicon2x.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="img/favicon6x.png" sizes="96x96">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+  </head>
+  <body>
+
+    <section class="hero">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        Parser Table Tool
+      </h1>
+      <h2 class="subtitle">
+        Hero subtitle
+      </h2>
+    </div>
+  </div>
+</section>
+  <section>
+    <div class="container">
+    <div class="columns">
+    <div class="column">
+      <form action="#" method="GET" id="form">
+
+      <div class="field">
+  <label class="label">Rules:</label>
+  <div class="control">
+    <textarea class="textarea" placeholder="Enter rules"></textarea>
+  </div>
+</div>
+    </form>
+    </div>
+    <div class="column">
+      Second column
+    </div>
+    <div class="column">
+      Third column
+    </div>
+    <div class="column">
+      Fourth column
+    </div>
+  </div>
+
+</div>
+
+  </section>
+  <footer class="footer">
+  <div class="container">
+    <nav class="level">
+    <div class="content level-item has-text-centered">
+      <p>
+
+        Coded with <i class="fas fa-heart"></i> in Texas by <a href="https://www.linkedin.com/in/alexander-hicks/">Alexander Hicks</a>
+        <br><font size="+2">
+        <a href="https://github.com/ahicks1"><i class="fab fa-github-square"></i></a>
+        <a href="https://www.linkedin.com/in/alexander-hicks/"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.behance.net/alexanderhicks"><i class="fab fa-behance-square"></i></a>
+
+
+
+    </div>
+  </nav>
+  </div>
+  </footer>
+  <script type="text/javascript">
+        <!--
+        var users = [];
+           var numCandidates = 1;
+           var gDiv = document.getElementById("grammar_form");
+           window.onload=function() {
+             document.getElementById('form').onsubmit=function() {
+               /* do what you want with the form */
+
+               return false;
+             }
+           }
+
+           document.getElementById("add_button").onclick = handleAddClick;
+           function handleAddClick(event) {
+             numCandidates += 1;
+             var add = document.createElement("div");
+             add.innerHTML += `<div class="field">
+                 <input class="input" type="text" placeholder="Text input" onkeypress="enterHandle(event)">
+             </div>`;
+             gDiv.appendChild(add);
+             add.children[0].children[0].children[0].focus();
+           }
+           function enterHandle(event) {
+             if(event.keyCode === 13){
+               event.preventDefault(); // Ensure it is only this code that runs
+               handleAddClick(event);
+             }
+           }
+        //-->
+     </script>
+  </body>
+</html>
