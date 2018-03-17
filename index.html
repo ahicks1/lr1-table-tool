@@ -39,19 +39,23 @@
       <div class="field">
   <label class="label">Rules:</label>
   <div class="control">
-    <textarea class="textarea" placeholder="Enter rules"></textarea>
+    <textarea class="textarea" placeholder="Enter rules" id="rules_input"></textarea>
   </div>
 </div>
+
     </form>
+    <a class="button is-primary is-right" id="generate_button">Generate Tables</a>
     </div>
     <div class="column">
-      Second column
+      <b>States:</b>
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column">
+      <b>Goto Table:</b>
     </div>
     <div class="column">
-      Third column
-    </div>
-    <div class="column">
-      Fourth column
+      <b>Action Table:</b>
     </div>
   </div>
 
@@ -76,11 +80,13 @@
   </nav>
   </div>
   </footer>
+  <script src="js/grammarModeling.js"></script>
   <script type="text/javascript">
         <!--
         var users = [];
+        var grammar;
            var numCandidates = 1;
-           var gDiv = document.getElementById("grammar_form");
+           var gDiv = document.getElementById("form");
            window.onload=function() {
              document.getElementById('form').onsubmit=function() {
                /* do what you want with the form */
@@ -89,15 +95,9 @@
              }
            }
 
-           document.getElementById("add_button").onclick = handleAddClick;
-           function handleAddClick(event) {
-             numCandidates += 1;
-             var add = document.createElement("div");
-             add.innerHTML += `<div class="field">
-                 <input class="input" type="text" placeholder="Text input" onkeypress="enterHandle(event)">
-             </div>`;
-             gDiv.appendChild(add);
-             add.children[0].children[0].children[0].focus();
+           document.getElementById("generate_button").onclick = handleGenButton;
+           function handleGenButton(event) {
+            grammar = generateGrammar(document.getElementById("rules_input").value);
            }
            function enterHandle(event) {
              if(event.keyCode === 13){
