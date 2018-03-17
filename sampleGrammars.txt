@@ -1,0 +1,7 @@
+A : x A E Y
+| x F
+E : z A z
+| F A
+F : q
+| r F s
+| A A
