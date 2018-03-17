@@ -123,6 +123,8 @@ var Grammar = {
     instance.terminals = terminals;
     instance.nonTerminals = nonTerminals;
     instance.productions = productions;
+    instance.updateFirstSet();
+    instance.updateFollowSet();
     return instance;
   },
 
@@ -190,9 +192,9 @@ var Grammar = {
           //Check to see if we're looking at a non terminal
           if(isNonTerminal(rl.production[i])) {
             var symbol = rl.production[i];
-            console.log("Found non-terminal "+symbol);
+            //console.log("Found non-terminal "+symbol);
             if(i == (rl.production.length-1)) {
-              console.log("End of production, adding follow set of: "+rl.result)
+              //console.log("End of production, adding follow set of: "+rl.result)
               //End of production: add result's follow set to non-terminals follow set
               for(var fterm of par.followSet[rl.result]) {
                 if(!par.followSet[symbol].has(fterm)) {
@@ -203,7 +205,7 @@ var Grammar = {
 
             } else if(isNonTerminal(rl.production[i+1])) {
               var next = rl.production[i+1];
-              console.log("Non-terminal: "+next)
+              //console.log("Non-terminal: "+next)
               //Next symbol is a non-terminal: add first set to follow set
               for(var fterm of par.firstSet[next].values()) {
                 if(!par.followSet[symbol].has(fterm)) {
@@ -214,7 +216,7 @@ var Grammar = {
 
             } else {
               var next = rl.production[i+1];
-              console.log("terminal: "+next)
+              //console.log("terminal: "+next)
               //Next symbol is a terminal: add to follow set
               if(!par.followSet[symbol].has(next)) {
                 finished = false;
@@ -222,7 +224,6 @@ var Grammar = {
               }
 
             }
-
           }
         }
       })
@@ -254,7 +255,6 @@ function generateGrammar(input) {
           firstProduction = currentNonTerm;
           console.log("First production: "+currentNonTerm);
         }
-        console.log("Non Terminal: "+currentNonTerm);
         prod = chars.slice(2);
       } else {
         prod = chars.slice(1);
@@ -267,7 +267,6 @@ function generateGrammar(input) {
           terminals.add(symbol);
         }
       });
-      console.log("Production: "+prod);
     } else {
       console.log("Unexpected input! "+chars)
     }

@@ -47,6 +47,21 @@
     <a class="button is-primary is-right" id="generate_button">Generate Tables</a>
     </div>
     <div class="column">
+      <b>First and follow sets:</b>
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>First</th>
+            <th>Follow</th>
+          </tr>
+        </thead>
+        <tbody id="first_follow_table">
+
+        </tbody>
+      </table>
+    </div>
+    <div class="column">
       <b>States:</b>
     </div>
   </div>
@@ -96,8 +111,17 @@
            }
 
            document.getElementById("generate_button").onclick = handleGenButton;
+           var firstTable = document.getElementById("first_follow_table");
            function handleGenButton(event) {
-            grammar = generateGrammar(document.getElementById("rules_input").value);
+             grammar = generateGrammar(document.getElementById("rules_input").value);
+             firstTable.innerHTML = "";
+             grammar.nonTerminals.forEach(function(symbol) {
+               firstTable.innerHTML += `<tr>
+                 <td><b>${symbol}</b></td>
+                 <td>${Array.from(grammar.firstSet[symbol].values()).join(", ")}</td>
+                 <td>${Array.from(grammar.followSet[symbol].values()).join(", ")}</td>
+               </tr>`
+             });
            }
            function enterHandle(event) {
              if(event.keyCode === 13){
