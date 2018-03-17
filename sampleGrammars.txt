@@ -1,4 +1,4 @@
-A : x A E Y
+A : x A E y
 | x F
 E : z A z
 | F A
