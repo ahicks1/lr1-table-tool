@@ -135,6 +135,7 @@ var Grammar = {
       par.firstSet[rl.result] = new Set();
     })
     while(!finished) {
+      // if nothing changes fixed point generation has finished
       finished = true;
       this.productions.forEach(function(rl) {
         //Check to see if first is a non-terminal
@@ -158,7 +159,74 @@ var Grammar = {
   },
 
   updateFollowSet: function() {
-    return undefined
+    var finished = false;
+    //clear first set
+    this.followSet = {};
+    var par = this;
+    this.productions.forEach(function(rl) {
+      par.followSet[rl.result] = new Set();
+    })
+
+    // Add end of input to startSymbol follow set
+    this.followSet[this.startSymbol].add("$");
+
+    /*
+     * There are three cases when encountering a non-terminal
+     * - The following item is terminal
+     *   - Add the terminal to the follow set
+     * - The following item is a non-terminal
+     *   - TODO: check to see if the non-terminal could be epsilon
+     *   - Add the non-terminal's first set to the follow set
+     * - The non-terminal is at the end of the production
+     *   - Add the result's follow set to the non-terminal's follow set
+     */
+    while(!finished) {
+      finished = true;
+      //Loop over all productions
+      this.productions.forEach(function(rl) {
+        //Loop over every symbol in the production
+        //Old fashioned because we need lookahead
+        for(var i = 0; i < rl.production.length; i++) {
+          //Check to see if we're looking at a non terminal
+          if(isNonTerminal(rl.production[i])) {
+            var symbol = rl.production[i];
+            console.log("Found non-terminal "+symbol);
+            if(i == (rl.production.length-1)) {
+              console.log("End of production, adding follow set of: "+rl.result)
+              //End of production: add result's follow set to non-terminals follow set
+              for(var fterm of par.followSet[rl.result]) {
+                if(!par.followSet[symbol].has(fterm)) {
+                  finished = false;
+                  par.followSet[symbol].add(fterm);
+                }
+              }
+
+            } else if(isNonTerminal(rl.production[i+1])) {
+              var next = rl.production[i+1];
+              console.log("Non-terminal: "+next)
+              //Next symbol is a non-terminal: add first set to follow set
+              for(var fterm of par.firstSet[next].values()) {
+                if(!par.followSet[symbol].has(fterm)) {
+                  finished = false;
+                  par.followSet[symbol].add(fterm);
+                }
+              }
+
+            } else {
+              var next = rl.production[i+1];
+              console.log("terminal: "+next)
+              //Next symbol is a terminal: add to follow set
+              if(!par.followSet[symbol].has(next)) {
+                finished = false;
+                par.followSet[symbol].add(next);
+              }
+
+            }
+
+          }
+        }
+      })
+    }
   }
 
 
