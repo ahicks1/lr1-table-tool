@@ -73,13 +73,13 @@ var Item = {
    },
 
    /**
-    * equals function
+    * equality function
     * @param other:Rule - rule to check equality against
-    *
-    * @return a string representation of the rule
     */
    equals: function(other) {
-     return this.show() == other.show();
+     var res = this.show() == other.show();
+     //console.log(this.show()+" == "+other.show()+" is "+res);
+     return res;
    }
 
 }
@@ -95,13 +95,49 @@ var State = {
    *
    * @return an instance of Item
    */
-  create: function(number,position) {
+  create: function(number,items) {
     var instance = Object.create(this);
-    instance.result = rule.result;
-    instance.production = rule.production;
-    instance.cursor = position || 0;
+    instance.number = number;
+    instance.items = items;
     return instance;
   },
+
+  /**
+   * equality function
+   * @param other:State - state to check equality against
+   */
+  equals: function(other) {
+    var ret = this.items.every(function(i){console.log(other.contains(i));return other.contains(i)});
+    return other.items.length == this.items.length && ret;
+  },
+
+  contains: function(item) {
+    return this.items.some(function(i){return item.equals(i)});
+  },
+
+
+  createClosure: function(grammar) {
+    //looping function to generate total closure
+    var finished = false;
+    var nTsExpanded = new Set();
+    var par = this;
+    while(!finished) {
+      finished = true;
+      this.items.forEach(function(item) {
+        var next = item.production[item.cursor];
+        if(isNonTerminal(next) && !nTsExpanded.has(next)) {
+          console.log("adding new expansion for "+next);
+          finished = false;
+          var toAdd = grammar.productions.filter(function(r){return r.result == next});
+          toAdd.forEach(function(r){
+            console.log(Item.create(r,0).show());
+            par.items.push(Item.create(r,0));
+          });
+          nTsExpanded.add(next);
+        }
+      })
+    }
+  }
 }
 
 /**
@@ -228,6 +264,10 @@ var Grammar = {
         }
       })
     }
+  },
+
+  updateStates: function() {
+
   }
 
 

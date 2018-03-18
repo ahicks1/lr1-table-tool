@@ -5,3 +5,15 @@ E : z A z
 F : q
 | r F s
 | A A
+
+S : if E then S
+| print E
+E : E + E
+| P var
+P : * P
+| E
+
+S : a E b
+| a F
+E : F x
+F : y
