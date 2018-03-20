@@ -63,6 +63,17 @@
     </div>
     <div class="column">
       <b>States:</b>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Rules</th>
+          </tr>
+        </thead>
+        <tbody id="state_table">
+
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="columns">
@@ -112,6 +123,7 @@
 
            document.getElementById("generate_button").onclick = handleGenButton;
            var firstTable = document.getElementById("first_follow_table");
+           var stateTable = document.getElementById("state_table");
            function handleGenButton(event) {
              grammar = generateGrammar(document.getElementById("rules_input").value);
              firstTable.innerHTML = "";
@@ -121,6 +133,22 @@
                  <td>${Array.from(grammar.firstSet[symbol].values()).join(", ")}</td>
                  <td>${Array.from(grammar.followSet[symbol].values()).join(", ")}</td>
                </tr>`
+             });
+             grammar.updateStates();
+             stateTable.innerHTML = "";
+             grammar.states.forEach(function(state){
+               let out = `<tr>
+                 <td><b>${state.number}</b></td>
+                 <td>${state.items[0].show()}</td>
+               </tr>`
+
+               state.items.slice(1).forEach((s) => {
+                 out +=`<tr>
+                 <td><b></b></td>
+                 <td>${s.show()}</td>
+                 </tr>`
+               });
+               stateTable.innerHTML += out;
              });
            }
            function enterHandle(event) {

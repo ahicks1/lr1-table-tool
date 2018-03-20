@@ -1,4 +1,3 @@
-
 /***
  * Trying to use prototypal pattern for inheritance
  */
@@ -10,7 +9,7 @@ var Rule = {
   /**
    * Constructor function
    * @param result:String - The non-terminal symbol that the rule produces
-   * @param production:[String] - The list of terminal and nonTerminal symbols
+   * @param production:[String] - The list of terminal and non-terminal symbols
    *
    * @return an instance of Rule
    */
@@ -115,6 +114,19 @@ var State = {
     return this.items.some(function(i){return item.equals(i)});
   },
 
+  show: function() {
+    console.log("State number "+this.number);
+    this.items.forEach( (i) => console.log(i.show()))
+  },
+
+
+  createNext: function(number,symbol,grammar) {
+    var filtered = this.items.filter((i) => {return i.production[i.cursor] == symbol});
+    console.log(filtered);
+    var ret = State.create(number, filtered.map((i) => {return Item.create(i,(i.cursor +1))}));
+    ret.createClosure(grammar);
+    return ret;
+  },
 
   createClosure: function(grammar) {
     //looping function to generate total closure
@@ -125,7 +137,7 @@ var State = {
       finished = true;
       this.items.forEach(function(item) {
         var next = item.production[item.cursor];
-        if(isNonTerminal(next) && !nTsExpanded.has(next)) {
+        if(next && isNonTerminal(next) && !nTsExpanded.has(next)) {
           console.log("adding new expansion for "+next);
           finished = false;
           var toAdd = grammar.productions.filter(function(r){return r.result == next});
@@ -258,7 +270,6 @@ var Grammar = {
                 finished = false;
                 par.followSet[symbol].add(next);
               }
-
             }
           }
         }
@@ -266,7 +277,32 @@ var Grammar = {
     }
   },
 
+  hasState: function(state) {
+    return this.states.findIndex((s) => s.equals(state)) != -1;
+  },
+
   updateStates: function() {
+    var par = this;
+    this.states = [];
+    var firstRules = this.productions.filter((prod) => {return prod.result == par.startSymbol});
+    firstRules.forEach((e) => {console.log(e.show())});
+    this.states[0] = State.create(0,firstRules.map(function(prod){return Item.create(prod)}))
+    var state;
+    //Create rules while unprocessed rules exist
+    let rulesProcessed = 0;
+    while(this.states.length != rulesProcessed) {
+      state = this.states[rulesProcessed];
+      symbolsToCheck = new Set();
+      state.items.forEach((i) => {if(i.cursor < i.production.length){symbolsToCheck.add(i.production[i.cursor])}});
+      console.log(symbolsToCheck);
+      symbolsToCheck.forEach((s) => {
+        let newS = state.createNext(this.states.length,s,par);
+        if(!par.hasState(newS)) {
+          par.states.push(newS);
+        }
+      });
+      rulesProcessed += 1;
+    }
 
   }
 
@@ -312,6 +348,8 @@ function generateGrammar(input) {
     }
 
   });
+
+
 
   console.log("Terminals: "+Array.from(terminals.values()));
   console.log("Non-Terminals: "+Array.from(nonTerminals.values()));
